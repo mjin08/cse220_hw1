@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Run Main",
+            "program": "${workspaceRoot}/build/hw1_main",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Run All Tests",
+            "program": "${workspaceRoot}/build/run_all_tests",
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build"
+        },
+    ],
+}

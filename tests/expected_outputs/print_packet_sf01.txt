@@ -1,0 +1,11 @@
+Source Address: 1908874
+Destination Address: 11801002
+Source Port: 12
+Destination Port: 13
+Fragment Offset: 0
+Packet Length: 28
+Maximum Hop Count: 21
+Checksum: 6204849
+Compression Scheme: 3
+Traffic Class: 51
+Payload: 8675309 -39281 92832146

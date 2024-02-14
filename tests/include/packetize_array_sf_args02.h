@@ -1,0 +1,11 @@
+int array[] = {-6, 823, 9, 1888, 0, -17, 9999999, -888888, 723, 1000, 1111};
+unsigned char* actual_packets[4] = {0};
+unsigned int num_expected_packets = 4;
+unsigned int max_payload = 3 * sizeof(int);
+unsigned int src_addr = 93737;
+unsigned int dest_addr = 10973;
+unsigned int src_port = 11;
+unsigned int dest_port = 6;
+unsigned int maximum_hop_count = 25;
+unsigned int compression_scheme = 3;
+unsigned int traffic_class = 14;

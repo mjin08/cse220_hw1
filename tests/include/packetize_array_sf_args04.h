@@ -1,0 +1,11 @@
+int array[] = {-710617, 1930886, -3307223, -363085, 2747793, -761665, 4885386, 4760492, 1516649, 4641421, 202362, -4509973, -1631310, -2479941, -102237, 2513926, 180540, -4616574, -910828, -1544264, 5211, -3404632, -297433, 1956429, 1465782, -3978470, 3722862, -1334877, 174067, 3703135, -3486071, -3020198, 634022, 723058, 4133069, 898167, 4961393, 4018456, 3175011, 1478042, -3823771, -1622627, 4484421, -455081, 3413784, 1898537, -424802, -1405676, 4798315, 3664370, };
+unsigned char* actual_packets[9] = {0};
+unsigned int num_expected_packets = 9;
+unsigned int max_payload = 24;
+unsigned int src_addr = 11111;
+unsigned int dest_addr = 22222;
+unsigned int src_port = 13;
+unsigned int dest_port = 14;
+unsigned int maximum_hop_count = 17;
+unsigned int compression_scheme = 1;
+unsigned int traffic_class = 44;
