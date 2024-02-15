@@ -70,18 +70,15 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
             unsigned int fragment_offset = (packet[8] << 6) | (packet[9] >> 2);
             unsigned int packet_length = ((packet[9] << 12) & 0x02) | (packet[10] << 4) | (packet[11] >> 4);
             
-            int index = 0; 
-            if (index <= array_len) {
-                for (int i = 0; i < packet_length - 16; i += 4) { 
+            for (int i = 0; i < packet_length - 16; i += 4) { 
+                if (num_ints < array_len) {
                     unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3]; 
-                    array[index] = payload; 
-                    index++; 
+                    array[num_ints] = payload; 
                     num_ints++;
                 }
-            }
-
-            if (num_ints >= array_len) {
-                break;
+                else {
+                    break;
+                }
             }
         }
     }
