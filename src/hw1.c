@@ -56,12 +56,36 @@ unsigned int compute_checksum_sf(unsigned char packet[])
 }
 
 
-unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) {
-    (void)packets;
-    (void)packets_len;
-    (void)array;
-    (void)array_len;
-    return -1;
+unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets_len, int *array, unsigned int array_len) 
+{
+    unsigned int num_ints = 0;
+
+    for (unsigned int i = 0; i < packets_len; i++) {
+        unsigned char *packet = packets[i];
+
+        unsigned int checksum = ((packet[12]) & 0x7f) << 16 | (packet[13] << 8) | (packet[14]);
+        unsigned int computed_sum = compute_checksum_sf(packets[i]);
+
+        if (checksum == computed_sum) {
+            unsigned int fragment_offset = (packet[8] << 6) | (packet[9] >> 2);
+            unsigned int packet_length = ((packet[9] << 12) & 0x02) | (packet[10] << 4) | (packet[11] >> 4);
+            
+            int index = 0; 
+            if (index <= array_len) {
+                for (int i = 0; i < packet_length - 16; i += 4) { 
+                    unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3]; 
+                    array[index] = payload; 
+                    index++; 
+                    num_ints++;
+                }
+            }
+
+            if (num_ints >= array_len) {
+                break;
+            }
+        }
+    }
+    return num_ints;
 }
 
 unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned char *packets[], unsigned int packets_len,
