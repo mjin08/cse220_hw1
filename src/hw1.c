@@ -4,14 +4,14 @@ void print_packet_sf(unsigned char packet[])
 {
     unsigned int source_address = (packet[0] << 20) | (packet[1] << 12) | (packet[2] << 4) | (packet[3] >> 4);
     unsigned int destination_address = ((packet[3] & 0x0f) << 24) | (packet[4] << 16) | (packet[5] << 8) | (packet[6]);
-    unsigned int source_port = ((packet[7] << 4) & 0x0f);
+    unsigned int source_port = ((packet[7] << 4) & 0xf);
     unsigned int destination_port = (packet[7] & 0xf);
     unsigned int fragment_offset = (packet[8] << 6) | (packet[9] << 2) ;
-    unsigned int packet_length = ((packet[9] & 0x03) << 12) | ((packet[10] << 4) & 0x07);
-    unsigned int maximum_hop_count = (packet[11] & 0x0f) | ((packet[12] << 7) & 0x01);
+    unsigned int packet_length = (packet[9] << 12) | ((packet[10] << 4) & 0x07);
+    unsigned int maximum_hop_count = (packet[11] & 0xf) | (packet[12] >> 7);
     unsigned int checksum = ((packet[12]) & 0x7f) << 16 | (packet[13] << 8) | (packet[14]);
-    unsigned int compression_scheme = (packet[15] << 6) & 0x3f;
-    unsigned int traffic_class = packet[15] & 0x0f;
+    unsigned int compression_scheme = packet[15] & 0x0f; 
+    unsigned int traffic_class = (packet[15] & 0x3f);
  
     printf("Source Address: %u\n", source_address);
     printf("Destination Address: %u\n", destination_address);
