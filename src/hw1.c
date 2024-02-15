@@ -37,7 +37,7 @@ unsigned int compute_checksum_sf(unsigned char packet[])
     unsigned int sum = 0;
     unsigned int packet_length = ((packet[9] << 12) & 0x02) | (packet[10] << 4) | (packet[11] >> 4);
     
-    sum = (packet[0] << 20) | (packet[1] << 12) | (packet[2] << 4) | (packet[3] >> 4) 
+    sum = (packet[0] << 20) | (packet[1] << 12) | (packet[2] << 4) | (packet[3] >> 4)
         + ((packet[3] & 0x0f) << 24) | (packet[4] << 16) | (packet[5] << 8) | (packet[6])
         + ((packet[7] >> 4) & 0xf)
         + (packet[7] & 0xf)
@@ -48,8 +48,8 @@ unsigned int compute_checksum_sf(unsigned char packet[])
         + (packet[15] & 0x3f);
 
     for (int i = 0; i < packet_length - 16; i += 4) {
-        unsigned int val = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3];
-        sum += abs(val);
+        unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3];
+        sum += abs(payload);
     }
 
     return sum % (1 << 23) - 1;
