@@ -6,11 +6,11 @@ void print_packet_sf(unsigned char packet[])
     unsigned int destination_address = ((packet[3] & 0x0f) << 24) | (packet[4] << 16) | (packet[5] << 8) | (packet[6]);
     unsigned int source_port = ((packet[7] >> 4) & 0xf);
     unsigned int destination_port = (packet[7] & 0xf);
-    unsigned int fragment_offset = (packet[8] << 6) | (packet[9] & 0x02);
+    unsigned int fragment_offset = (packet[8] << 6) | (packet[9] << 2);
     unsigned int packet_length = ((packet[9] << 12) & 0x02) | (packet[10] << 4) | (packet[11] >> 4);
-    unsigned int maximum_hop_count = ((packet[11] << 4) & 0xf) | ((packet[12] << 1) & 0x7f);
+    unsigned int maximum_hop_count = ((packet[11] << 4) & 0xf) | (packet[12] << 1);
     unsigned int checksum = ((packet[12]) & 0x7f) << 16 | (packet[13] << 8) | (packet[14]);
-    unsigned int compression_scheme = ((packet[15] << 2) & 0x3f); 
+    unsigned int compression_scheme = (packet[15] << 2); 
     unsigned int traffic_class = (packet[15] & 0x3f);
  
     printf("Source Address: %u\n", source_address);
