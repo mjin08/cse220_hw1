@@ -71,7 +71,7 @@ unsigned int reconstruct_array_sf(unsigned char *packets[], unsigned int packets
             unsigned int packet_length = ((packet[9] << 12) & 0x02) | (packet[10] << 4) | (packet[11] >> 4);
             
             for (int j = 0; j < packet_length - 16; j += 4) { 
-                if (num_ints < array_len) {
+                if (num_ints < array_len && fragment_offset < array_len) {
                     unsigned int payload = (packet[16 + j] << 24) | (packet[16 + j + 1] << 16) | (packet[16 + j + 2] << 8) | packet[16 + j + 3]; 
                     array[fragment_offset] = payload; 
                     fragment_offset++;
