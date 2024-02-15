@@ -49,10 +49,10 @@ unsigned int compute_checksum_sf(unsigned char packet[])
 
     for (int i = 0; i < packet_length - 16; i += 4) {
         unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3];
-        sum += payload;
+        sum += abs(payload);
     }
 
-    return sum % (1 << 23) - 1;
+    return sum % ((1 << 23) - 1);
 }
 
 
