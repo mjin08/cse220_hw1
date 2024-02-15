@@ -26,7 +26,7 @@ void print_packet_sf(unsigned char packet[])
     printf("Payload:");
 
     for (int i = 0; i < packet_length - 16; i += 4) {
-        unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i +2] << 8) | packet[16 + i + 3];
+        unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3];
         printf(" %d", payload);
     }
     printf("\n");
@@ -49,7 +49,7 @@ unsigned int compute_checksum_sf(unsigned char packet[])
 
     for (int i = 0; i < packet_length - 16; i += 4) {
         unsigned int payload = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i + 2] << 8) | packet[16 + i + 3];
-        sum += abs(payload);
+        sum += payload;
     }
 
     return sum % (1 << 23) - 1;
