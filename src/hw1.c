@@ -2,7 +2,33 @@
 
 void print_packet_sf(unsigned char packet[])
 {
-    (void)packet;
+    unsigned int source_address = (packet[0] << 20) | (packet[1] << 12) | (packet[2] << 4) | (packet[3] >> 4);
+    unsigned int destination_address = ((packet[3] & 0x0f) << 24) | (packet[4] << 16) | (packet[5] << 8) | (packet[6]);
+    unsigned int source_port = ((packet[7] << 4) & 0x0f);
+    unsigned int destination_port = (packet[7] & 0xf);
+    unsigned int fragment_offset = (packet[8] << 6) | (packet[9] << 2) ;
+    unsigned int packet_length = ((packet[9] & 0x03) << 12) | ((packet[10] << 4) & 0x07);
+    unsigned int maximum_hop_count = (packet[11] & 0x0f) | ((packet[12] << 7) & 0x01);
+    unsigned int checksum = ((packet[12]) & 0x7f) << 16 | (packet[13] << 8) | (packet[14]);
+    unsigned int compression_scheme = (packet[15] << 6) & 0x3f;
+    unsigned int traffic_class = packet[15] & 0x0f;
+ 
+    printf("Source Address: %u\n", source_address);
+    printf("Destination Address: %u\n", destination_address);
+    printf("Source Port: %u\n", source_port);
+    printf("Destination Port: %u\n", destination_port);
+    printf("Fragment Offset: %u\n", fragment_offset);
+    printf("Packet Length: %u\n", packet_length);
+    printf("Maximum Hop Count: %u\n", maximum_hop_count);
+    printf("Checksum: %u\n", checksum);
+    printf("Compression Scheme: %u\n", compression_scheme);
+    printf("Traffic Class: %u\n", traffic_class);
+
+    for (int i = 0; i < packet_length - 16; i += 4) {
+        unsigned int val = (packet[16 + i] << 24) | (packet[16 + i + 1] << 16) | (packet[16 + i +2] << 8) | packet[16 + i + 3];
+        printf("%d ", val);
+    }
+    printf("\n");
 }
 
 unsigned int compute_checksum_sf(unsigned char packet[])
