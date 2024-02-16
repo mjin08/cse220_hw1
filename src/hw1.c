@@ -91,17 +91,50 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
                           unsigned int src_port, unsigned int dest_port, unsigned int maximum_hop_count,
                           unsigned int compression_scheme, unsigned int traffic_class)
 {
-    (void)array;
-    (void)array_len;
-    (void)packets;
-    (void)packets_len;
-    (void)max_payload;
-    (void)src_addr;
-    (void)dest_addr;
-    (void)src_port;
-    (void)dest_port;
-    (void)maximum_hop_count;
-    (void)compression_scheme;
-    (void)traffic_class;
-    return -1;
+    unsigned int num_packets = 0;
+
+    for (unsigned int i = 0; i < array_len; i++) {
+        unsigned char *packet = malloc(max_payload);
+        packets[num_packets] = packet;
+
+        unsigned int payload_length = max_payload - 16;
+        
+        int bytes_remaining = (array_len - i) * sizeof(int);
+        if (bytes_remaining < payload_length) {
+            payload_length = bytes_remaining;
+        }
+
+        unsigned int packet_length = payload_length + 16;
+        unsigned int frag_offset = (i * sizeof(int)) / payload_length;
+        unsigned int checksum = compute_checksum_sf(packets[i]);
+
+        packets[num_packets][0] = (src_addr >> 20) & 0xff;
+        packets[num_packets][1] = (src_addr >> 12) & 0xff;
+        packets[num_packets][2] = (src_addr >> 4) & 0xf;
+        packets[num_packets][3] = ((src_addr & 0xf) << 4) | ((dest_addr >> 24) & 0xf);
+        packets[num_packets][4] = (dest_addr >> 16) & 0xff;
+        packets[num_packets][5] = (dest_addr >> 8) & 0xff;
+        packets[num_packets][6] = dest_addr & 0xff;
+        packets[num_packets][7] = (src_port << 4) | dest_port;
+        packets[num_packets][8] = (frag_offset >> 6) & 0xff;
+        packets[num_packets][9] = ((frag_offset & 0x3f) << 2) | ((packet_length >> 12) & 0x3);
+        packets[num_packets][10] = (packet_length >> 4) & 0xff;
+        packets[num_packets][11] = ((packet_length & 0xf) << 4) | ((maximum_hop_count >> 1) & 0xf);
+        packets[num_packets][12] = ((maximum_hop_count & 0x1) << 7) | ((checksum >> 16) & 0x7f);
+        packets[num_packets][13] = ((checksum >> 8) & 0xff);
+        packets[num_packets][14] = (checksum & 0xff);
+        packets[num_packets][15] = ((compression_scheme & 0x3) << 6) | (traffic_class & 0xff);
+
+        for (int j = 0; j < payload_length; j++) {
+            packets[num_packets][16 + j] = array[i + j];
+        }
+        
+        num_packets++;
+
+        if (num_packets == packets_len) {
+            break;
+        }
+    }
+
+    return num_packets;
 }
