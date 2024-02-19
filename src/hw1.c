@@ -95,17 +95,22 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
     for (unsigned int i = 0; i < array_len; i += max_payload / sizeof(int)) {
         unsigned char *packet = malloc(max_payload);
+        if (packet == NULL) {
+            break;
+        }
         packets[num_packets] = packet;
 
         unsigned int payload_length = max_payload - 16;
         
-        int bytes_remaining = (array_len - i) * sizeof(int);
-        if (bytes_remaining < payload_length) {
-            payload_length = bytes_remaining;
+        for (int m = 0; m < array_len; m++) {
+            if (payload_length + sizeof(int) > max_payload) {
+                break;
+            }
+            payload_length += sizeof(int);
         }
 
         unsigned int packet_length = payload_length + 16;
-        unsigned int frag_offset = (i * sizeof(int)) / payload_length;
+        unsigned int frag_offset = (i * sizeof(int)) / (float) payload_length;
         unsigned int checksum = compute_checksum_sf(packet);
 
         packets[num_packets][0] = (src_addr >> 20) & 0xff;
