@@ -102,10 +102,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
         unsigned int payload_length = max_payload - 16;
         
-        for (int m = 0; m < array_len; m++) {
-            if (payload_length + sizeof(int) > max_payload) {
-                break;
-            }
+        for (; i < array_len && payload_length + sizeof(int) <= max_payload; i++) {
             payload_length += sizeof(int);
         }
 
@@ -135,7 +132,6 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
         }
         
         num_packets++;
-        i += payload_length / sizeof(int);
 
         if (num_packets == packets_len || i >= array_len) {
             break;
