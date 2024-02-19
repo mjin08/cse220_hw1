@@ -93,7 +93,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 {
     unsigned int num_packets = 0;
 
-    for (unsigned int i = 0; i < array_len; i++) {
+    for (unsigned int i = 0; i < array_len; i += max_payload / sizeof(int)) {
         unsigned char *packet = malloc(max_payload);
         packets[num_packets] = packet;
 
@@ -106,7 +106,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
         unsigned int packet_length = payload_length + 16;
         unsigned int frag_offset = (i * sizeof(int)) / payload_length;
-        unsigned int checksum = compute_checksum_sf(packets[i]);
+        unsigned int checksum = compute_checksum_sf(packet);
 
         packets[num_packets][0] = (src_addr >> 20) & 0xff;
         packets[num_packets][1] = (src_addr >> 12) & 0xff;
@@ -126,12 +126,13 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
         packets[num_packets][15] = ((compression_scheme & 0x3) << 6) | (traffic_class & 0xff);
 
         for (int j = 0; j < payload_length; j++) {
-            packets[num_packets][16 + j] = array[i + j];
+            packets[num_packets][16 + j] = (unsigned char) array[i + j];
         }
         
         num_packets++;
+        i += payload_length / sizeof(int);
 
-        if (num_packets == packets_len) {
+        if (num_packets == packets_len || i >= array_len) {
             break;
         }
     }
