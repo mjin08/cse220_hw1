@@ -126,7 +126,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
             packet_length = 16 + ((remaining_array_len) * 4);
         }
 
-        printf("packet length: %u\n", packet_length); 
+        // printf("packet length: %u\n", packet_length); 
 
         packets[i] = malloc(16 + (max_payload));
 
@@ -164,7 +164,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
         packets[i][13] = ((checksum >> 8) & 0xff);
         packets[i][14] = (checksum & 0xff);
 
-        printf("num packets: %u\n", i);
+        // printf("num packets: %u\n", i);
     }
 
     return i;
