@@ -119,7 +119,8 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
             packet_length = 16 + payload_length;
         }
         
-        unsigned int frag_offset = (payload_length * 4 * i);
+        unsigned int frag_offset = 0;
+        // unsigned int frag_offset = (payload_length * 4 * i);
 
         packets[i] = malloc(num_bytes);
 
@@ -150,6 +151,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
             counter++;
             j += 4;
         }
+        frag_offset += max_payload;
 
         unsigned int checksum = compute_checksum_sf(packets[i]);
         packets[i][12] = ((maximum_hop_count & 0x01) << 7) | ((checksum >> 16) & 0x7f);
