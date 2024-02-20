@@ -113,11 +113,12 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
         }
 
         unsigned int num_payloads = max_payload / 4;
+       
         unsigned int packet_length;
-        if (array_len - (num_payloads * i) > (payload_length)) {
+        if (array_len - (num_payloads * i) >= (payload_length)) {
             packet_length = max_payload + 16;
         } else {
-            packet_length = 16 + payload_length;
+            packet_length = 16 + (payload_length * 4);
         }
         
         // unsigned int frag_offset = (payload_length * 4 * i);
