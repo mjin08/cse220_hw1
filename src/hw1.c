@@ -25,7 +25,7 @@ void print_packet_sf(unsigned char packet[])
     printf("Traffic Class: %u\n", traffic_class);
     printf("Payload:");
 
-    for (unsigned int i = 16; i < packet_length; i += 4) {
+    for (int i = 16; i < packet_length; i += 4) {
         unsigned int payload = (packet[i] << 24) | (packet[i + 1] << 16) | (packet[i + 2] << 8) | packet[i + 3];
         printf(" %d", payload);
     }
@@ -93,6 +93,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 {
     unsigned int i = 0;
     unsigned int counter = 0;
+    unsigned int frag_offset = 0;
 
     for (; i < packets_len && counter < array_len; i++) {
 
@@ -119,7 +120,6 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
             packet_length = 16 + payload_length;
         }
         
-        unsigned int frag_offset = 0;
         // unsigned int frag_offset = (payload_length * 4 * i);
 
         packets[i] = malloc(num_bytes);
