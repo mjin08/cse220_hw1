@@ -104,7 +104,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
     unsigned int frag_offset = 0;
     unsigned int packet_length = 0;
 
-    for (; i < packets_len && i < array_len; i++) {
+    for (; i < packets_len && counter < array_len; i++) {
 
         // unsigned int num_bytes = (payload_length * 4);
         
