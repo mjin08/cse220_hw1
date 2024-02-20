@@ -107,20 +107,20 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
         unsigned int num_payloads = max_payload / 4;
 
-        // unsigned int payload_length = 0;
-        // if ((array_len - counter) >= num_payloads) {
-        //     payload_length = num_payloads;
-        // } else {
-        //     payload_length = array_len - (counter * num_payloads);
-        // }
+        unsigned int payload_length = 0;
+        if ((array_len - counter) >= num_payloads) {
+            payload_length = num_payloads;
+        } else {
+            payload_length = array_len - (counter * num_payloads);
+        }
 
-        // unsigned int num_bytes = (payload_length * 4);
+        unsigned int num_bytes = (payload_length * 4);
         
-        // if (num_bytes <= max_payload) {
-        //     num_bytes = 16 + max_payload; 
-        // } else {
-        //     num_bytes = 16 + (num_bytes);
-        // }
+        if (num_bytes <= max_payload) {
+            num_bytes = 16 + max_payload; 
+        } else {
+            num_bytes = 16 + (num_bytes);
+        }
        
         unsigned int packet_length = 0;
         if (array_len - (num_payloads * i) >= (num_payloads)) {
@@ -131,7 +131,7 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
             // packet_length = 16 + (payload_length * 4);
         }
 
-        packets[i] = malloc(16 + (max_payload));
+        packets[i] = malloc(16 + (num_bytes));
 
         packets[i][0] = (src_addr >> 20) & 0xff;
         packets[i][1] = (src_addr >> 12) & 0xff;
