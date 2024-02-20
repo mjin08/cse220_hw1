@@ -105,13 +105,6 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
     for (; i < packets_len && i < array_len; i++) {
 
-        // unsigned int payload_length = 0;
-        // if ((array_len - counter) >= num_payloads) {
-        //     payload_length = num_payloads;
-        // } else {
-        //     payload_length = array_len - (counter * num_payloads);
-        // }
-
         // unsigned int num_bytes = (payload_length * 4);
         
         // if (num_bytes <= max_payload) {
@@ -122,19 +115,18 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
 
         unsigned int num_payloads = max_payload / 4;
 
-        printf("max_payload: %u, num_payloads: %u\n", max_payload, num_payloads);
-        printf("remaining array length: %u\n", array_len - (num_payloads * i));
+        // printf("max_payload: %u, num_payloads: %u\n", max_payload, num_payloads);
+        // printf("remaining array length: %u\n", array_len - (num_payloads * i));
 
         unsigned int packet_length = 0;
         if (array_len - (num_payloads * i) >= (num_payloads)) {
             packet_length = 16 + max_payload;
         } else {
             packet_length = 16 + (array_len - (num_payloads * i)) * 4;
-            // packet_length = 16 + (num_payloads * 4);
-            // packet_length = 16 + (payload_length * 4);
         }
 
         printf("packet length: %u\n", packet_length); 
+
         packets[i] = malloc(16 + (max_payload));
 
         packets[i][0] = (src_addr >> 20) & 0xff;
@@ -170,6 +162,8 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
         packets[i][12] = ((maximum_hop_count & 0x01) << 7) | ((checksum >> 16) & 0x7f);
         packets[i][13] = ((checksum >> 8) & 0xff);
         packets[i][14] = (checksum & 0xff);
+
+        printf("num packets: %u\n", i);
     }
 
     return i;
