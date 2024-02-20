@@ -103,33 +103,35 @@ unsigned int packetize_array_sf(int *array, unsigned int array_len, unsigned cha
     unsigned int counter = 0;
     unsigned int frag_offset = 0;
 
-    for (; i < packets_len && counter < array_len; i++) {
-
-        unsigned int payload_length;
-        if ((array_len - counter) > (max_payload / 4)) {
-            payload_length = max_payload / 4;
-        } else {
-            payload_length = array_len - counter;
-        }
-
-        unsigned int num_bytes = (payload_length * 4);
-        
-        if (num_bytes <= max_payload) {
-            num_bytes = 16 + max_payload; 
-        } else {
-            num_bytes = 16 + (num_bytes);
-        }
+    for (; i < packets_len && i < array_len; i++) {
 
         unsigned int num_payloads = max_payload / 4;
+
+        // unsigned int payload_length = 0;
+        // if ((array_len - counter) >= num_payloads) {
+        //     payload_length = num_payloads;
+        // } else {
+        //     payload_length = array_len - (counter * num_payloads);
+        // }
+
+        // unsigned int num_bytes = (payload_length * 4);
+        
+        // if (num_bytes <= max_payload) {
+        //     num_bytes = 16 + max_payload; 
+        // } else {
+        //     num_bytes = 16 + (num_bytes);
+        // }
        
-        unsigned int packet_length;
-        if (array_len - (num_payloads * i) >= (payload_length)) {
+        unsigned int packet_length = 0;
+        if (array_len - (num_payloads * i) >= (num_payloads)) {
             packet_length = 16 + max_payload;
         } else {
-            packet_length = 16 + (payload_length * 4);
+            packet_length = (array_len - (num_payloads * i)) * 4;
+            // packet_length = 16 + (num_payloads * 4);
+            // packet_length = 16 + (payload_length * 4);
         }
 
-        packets[i] = malloc(num_bytes);
+        packets[i] = malloc(16 + (max_payload));
 
         packets[i][0] = (src_addr >> 20) & 0xff;
         packets[i][1] = (src_addr >> 12) & 0xff;
